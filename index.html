@@ -93,6 +93,16 @@
  .timetable-event{font-size:8px}
  @page{size:A4 landscape;margin:9mm}
 }
+
+/* Accurate half-hour weekly timetable */
+.timegrid{display:grid;grid-template-columns:72px repeat(7,minmax(130px,1fr));min-width:1060px;gap:3px;padding:4px;background:#fffaf9}
+.timegrid-head{background:#f6e6e8;border:1px solid #e7cfd5;border-radius:8px;text-align:center;padding:12px 4px;color:#804e5a;font-size:12px;font-weight:700}
+.timegrid-times,.timegrid-day{position:relative;border:1px solid #e7cfd5;border-radius:8px;background-color:white;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 46px,#ecdde0 47px,#ecdde0 48px);background-size:100% 48px}
+.timegrid-times{background-color:#fff2f3}
+.timegrid-time{position:absolute;right:8px;transform:translateY(-35%);font-size:11px;color:#805261;font-variant-numeric:tabular-nums}
+.timed-block{position:absolute;box-sizing:border-box;overflow:hidden;margin:0;padding:6px;z-index:1;font-size:11px;line-height:1.35}
+.timed-block span,.timed-block b{display:block;overflow-wrap:anywhere}
+@media print{.timegrid{min-width:0;grid-template-columns:50px repeat(7,minmax(0,1fr));gap:1px}.timegrid-head{padding:3px}.timegrid-time{font-size:7px}.timed-block{font-size:7px;padding:2px}.timegrid-times,.timegrid-day{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="./config.js"></script></head><body><div id="authGate"><div class="authcard"><div class="eyebrow">PRIVATE TEACHER PORTAL</div><h1>✿ Teacher Command Centre</h1><p class="muted">Your Blush & Ivory teaching workspace, safely synchronised across your devices.</p><div id="authContent">Connecting…</div></div></div><div class="layout"><aside class="side"><div class="brand">✿ Teacher<br>Command Centre</div><div class="sub">Dream Education · Mont Kiara</div><button class="mobilemenu" id="menuToggle" aria-controls="nav" aria-expanded="false" onclick="toggleMenu()">☰ Menu <span aria-hidden="true">⌄</span></button><div class="navbox" id="nav"></div><p class="small muted" style="margin:20px 10px">Blush & Ivory · Any year<br>Records synchronised with your private cloud. Export backups regularly.</p></aside><main class="main"><div class="top"><div><div class="eyebrow">My teaching workspace / Kuala Lumpur</div><span id="syncState">Cloud ready</span></div><div><button class="btn secondary" onclick="backup()">↓ Export backup</button> <button class="btn ghost" onclick="document.getElementById('import').click()">↑ Import</button><input hidden id="import" type="file" accept=".json" onchange="restore(event)"> <button class="btn ghost" onclick="signOut()">Sign out</button></div></div><div id="view"></div></main></div><div id="overlay"></div><script>
 const subjects=['English','Mathematics','Science','Biology','Physics','IELTS'];
 const allSubjects=()=>[...subjects,...(Array.isArray(db.customSubjects)?db.customSubjects:[])];
@@ -237,8 +247,25 @@ function weeklyTimetable(){
  const monday=weekStart(timetableWeek);
  const days=Array.from({length:7},(_,i)=>{let d=new Date(monday+'T12:00:00');d.setDate(d.getDate()+i);return {date:[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-'),name:d.toLocaleDateString('en-GB',{weekday:'short'}),label:d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}});
  const entries=db.schedule.filter(x=>days.some(d=>d.date===x.date)&&x.status!=='Cancelled');
- const hours=[...new Set([...Array.from({length:13},(_,i)=>i+7),...entries.map(x=>Number((x.start||'').split(':')[0])).filter(x=>Number.isInteger(x)&&x>=0&&x<=23)])].sort((a,b)=>a-b);
- return `${heading('Weekly timetable','An automatic timetable overview based on the lessons in your Class schedule.')}<div class="toolbar timetable-controls"><button class="btn secondary" onclick="shiftTimetableWeek(-1)">← Previous week</button><label class="small">Week of <input aria-label="Choose timetable week" type="date" value="${esc(timetableWeek)}" onchange="setTimetableWeek(this.value)"></label><button class="btn secondary" onclick="shiftTimetableWeek(1)">Next week →</button><button class="btn ghost" onclick="timetableWeek=today;render()">This week</button><button class="btn" onclick="window.print()">Print timetable</button></div><p class="muted small">Showing ${esc(days[0].label)} – ${esc(days[6].label)}. Lessons appear on their scheduled dates; this does not automatically repeat them every week.</p><div class="timetable-scroll"><table class="timetable-grid"><thead><tr><th>Time</th>${days.map(d=>`<th>${d.name}<span class="timetable-date">${d.label}</span></th>`).join('')}</tr></thead><tbody>${hours.map(hour=>`<tr><th>${String(hour).padStart(2,'0')}:00</th>${days.map(d=>{const lessons=entries.filter(x=>x.date===d.date&&Number((x.start||'').split(':')[0])===hour).sort((a,b)=>(a.start||'').localeCompare(b.start||''));return `<td>${lessons.map(x=>`<div class="timetable-event"><b>${esc(formatClock(x.start))} · ${esc(x.subject||'Lesson')}</b><span>${esc(studentName(x.studentId))}</span><span>${esc(x.duration||'60')} min${x.room?' · '+esc(x.room):''}</span></div>`).join('')}</td>`}).join('')}</tr>`).join('')}</tbody></table></div><p class="small muted">To add or edit lessons, open <button class="inline-link" onclick="go('schedule')">Class schedule</button>.</p>`;
+ const startMinute=9*60,endMinute=21*60,pxPerMinute=1.6;
+ const minuteOf=t=>{const m=/^(\d{1,2}):(\d{2})$/.exec(t||'');if(!m)return null;const h=+m[1],min=+m[2];return h<24&&min<60?h*60+min:null};
+ const fmt=min=>String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0');
+ const slots=Array.from({length:(endMinute-startMinute)/30+1},(_,i)=>startMinute+i*30);
+ const blocksForDay=day=>{
+  const lessons=entries.filter(x=>x.date===day.date).map(x=>({lesson:x,start:minuteOf(x.start),duration:Number(x.duration)||60})).filter(x=>x.start!==null&&x.start<endMinute&&x.start+x.duration>startMinute).sort((a,b)=>a.start-b.start);
+  // Side-by-side columns for genuine overlapping lessons; touching lessons stay full width.
+  const placed=[];
+  for(const item of lessons){let lane=0;while(placed.some(p=>p.lane===lane&&item.start<p.start+p.duration&&p.start<item.start+item.duration))lane++;placed.push({...item,lane})}
+  return placed.map(item=>{
+   const active=placed.filter(p=>p.start<item.start+item.duration&&item.start<p.start+p.duration);
+   const lanes=Math.max(1,...active.map(p=>p.lane+1));
+   const top=(Math.max(item.start,startMinute)-startMinute)*pxPerMinute;
+   const height=(Math.min(item.start+item.duration,endMinute)-Math.max(item.start,startMinute))*pxPerMinute;
+   const x=item.lesson;
+   return `<div class="timetable-event timed-block" style="top:${top}px;height:${Math.max(22,height-2)}px;left:calc(${item.lane*100/lanes}% + 3px);width:calc(${100/lanes}% - 6px)" title="${esc(fmt(item.start))}–${esc(fmt(item.start+item.duration))} · ${esc(x.subject||'Lesson')}"><b>${esc(fmt(item.start))}–${esc(fmt(item.start+item.duration))}</b><span>${esc(x.subject||'Lesson')}</span><span>${esc(studentName(x.studentId))}</span>${x.room?`<span>${esc(x.room)}</span>`:''}</div>`;
+  }).join('');
+ };
+ return `${heading('Weekly timetable','Your lessons displayed at their actual start times and durations.')}<div class="toolbar timetable-controls"><button class="btn secondary" onclick="shiftTimetableWeek(-1)">← Previous week</button><label class="small">Week of <input aria-label="Choose timetable week" type="date" value="${esc(timetableWeek)}" onchange="setTimetableWeek(this.value)"></label><button class="btn secondary" onclick="shiftTimetableWeek(1)">Next week →</button><button class="btn ghost" onclick="timetableWeek=today;render()">This week</button><button class="btn" onclick="window.print()">Print timetable</button></div><p class="muted small">Showing ${esc(days[0].label)} – ${esc(days[6].label)} · 09:00–21:00, with 30-minute guide lines. Back-to-back lessons are separate blocks. Lessons do not automatically repeat every week.</p><div class="timetable-scroll"><div class="timegrid"><div class="timegrid-head">Time</div>${days.map(d=>`<div class="timegrid-head">${d.name}<span class="timetable-date">${d.label}</span></div>`).join('')}<div class="timegrid-times" style="height:${(endMinute-startMinute)*pxPerMinute}px">${slots.map(t=>`<div class="timegrid-time" style="top:${(t-startMinute)*pxPerMinute}px">${fmt(t)}</div>`).join('')}</div>${days.map(d=>`<div class="timegrid-day" style="height:${(endMinute-startMinute)*pxPerMinute}px">${blocksForDay(d)}</div>`).join('')}</div></div><p class="small muted">To add or edit lessons, open <button class="inline-link" onclick="go('schedule')">Class schedule</button>. Classes outside 09:00–21:00 remain in your schedule list but are not shown in this timetable.</p>`;
 }
 
 const action=(txt,fn)=>`<button class="btn secondary" onclick="${fn}">${txt}</button>`;

@@ -99,7 +99,7 @@
 .timegrid-head{background:#f6e6e8;border:1px solid #e7cfd5;border-radius:8px;text-align:center;padding:12px 4px;color:#804e5a;font-size:12px;font-weight:700}
 .timegrid-times,.timegrid-day{position:relative;border:1px solid #e7cfd5;border-radius:8px;background-color:white;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 46px,#ecdde0 47px,#ecdde0 48px);background-size:100% 48px}
 .timegrid-times{background-color:#fff2f3}
-.timegrid-time{position:absolute;right:8px;transform:translateY(-35%);font-size:11px;color:#805261;font-variant-numeric:tabular-nums}
+.timegrid-time{position:absolute;left:0;right:0;text-align:center;transform:translateY(-50%);font-size:11px;color:#805261;font-variant-numeric:tabular-nums}
 .timed-block{position:absolute;box-sizing:border-box;overflow:hidden;margin:0;padding:6px;z-index:1;font-size:11px;line-height:1.35}
 .timed-block span,.timed-block b{display:block;overflow-wrap:anywhere}
 @media print{.timegrid{min-width:0;grid-template-columns:50px repeat(7,minmax(0,1fr));gap:1px}.timegrid-head{padding:3px}.timegrid-time{font-size:7px}.timed-block{font-size:7px;padding:2px}.timegrid-times,.timegrid-day{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
@@ -237,12 +237,12 @@ const nice=s=>s.replace(/([A-Z])/g,' $1').replace(/^./,c=>c.toUpperCase());
 const studentName=id=>db.students.find(x=>x.id===id)?.name||'(unassigned)';
 const dateNow=()=>new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Kuala_Lumpur'});
 const today=dateNow();
-const dayFromDate=date=>{if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(date||''))return '—';const [y,m,d]=date.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('en-GB',{weekday:'long'})};
+const dayFromDate=date=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(date||''))return '—';const [y,m,d]=date.split('-').map(Number);const check=new Date(y,m-1,d);if(check.getFullYear()!==y||check.getMonth()!==m-1||check.getDate()!==d)return '—';return check.toLocaleDateString('en-GB',{weekday:'long'})};
 let timetableWeek=today;
 function weekStart(date){const d=new Date((date||today)+'T12:00:00');if(Number.isNaN(d.getTime()))return today;const offset=(d.getDay()+6)%7;d.setDate(d.getDate()-offset);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
 function shiftTimetableWeek(n){const d=new Date(weekStart(timetableWeek)+'T12:00:00');d.setDate(d.getDate()+n*7);timetableWeek=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');render()}
-function setTimetableWeek(value){if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(value))return;timetableWeek=value;render()}
-function formatClock(t){return /^\\d{2}:\\d{2}$/.test(t||'')?t:'—'}
+function setTimetableWeek(value){if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return;timetableWeek=value;render()}
+function formatClock(t){return /^\d{2}:\d{2}$/.test(t||'')?t:'—'}
 function weeklyTimetable(){
  const monday=weekStart(timetableWeek);
  const days=Array.from({length:7},(_,i)=>{let d=new Date(monday+'T12:00:00');d.setDate(d.getDate()+i);return {date:[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-'),name:d.toLocaleDateString('en-GB',{weekday:'short'}),label:d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}});
@@ -250,7 +250,7 @@ function weeklyTimetable(){
  const startMinute=9*60,endMinute=21*60,pxPerMinute=1.6;
  const minuteOf=t=>{const m=/^(\d{1,2}):(\d{2})$/.exec(t||'');if(!m)return null;const h=+m[1],min=+m[2];return h<24&&min<60?h*60+min:null};
  const fmt=min=>String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0');
- const slots=Array.from({length:(endMinute-startMinute)/30+1},(_,i)=>startMinute+i*30);
+ const slots=Array.from({length:(endMinute-startMinute)/30},(_,i)=>startMinute+i*30);
  const blocksForDay=day=>{
   const lessons=entries.filter(x=>x.date===day.date).map(x=>({lesson:x,start:minuteOf(x.start),duration:Number(x.duration)||60})).filter(x=>x.start!==null&&x.start<endMinute&&x.start+x.duration>startMinute).sort((a,b)=>a.start-b.start);
   // Side-by-side columns for genuine overlapping lessons; touching lessons stay full width.
@@ -265,7 +265,7 @@ function weeklyTimetable(){
    return `<div class="timetable-event timed-block" style="top:${top}px;height:${Math.max(22,height-2)}px;left:calc(${item.lane*100/lanes}% + 3px);width:calc(${100/lanes}% - 6px)" title="${esc(fmt(item.start))}–${esc(fmt(item.start+item.duration))} · ${esc(x.subject||'Lesson')}"><b>${esc(fmt(item.start))}–${esc(fmt(item.start+item.duration))}</b><span>${esc(x.subject||'Lesson')}</span><span>${esc(studentName(x.studentId))}</span>${x.room?`<span>${esc(x.room)}</span>`:''}</div>`;
   }).join('');
  };
- return `${heading('Weekly timetable','Your lessons displayed at their actual start times and durations.')}<div class="toolbar timetable-controls"><button class="btn secondary" onclick="shiftTimetableWeek(-1)">← Previous week</button><label class="small">Week of <input aria-label="Choose timetable week" type="date" value="${esc(timetableWeek)}" onchange="setTimetableWeek(this.value)"></label><button class="btn secondary" onclick="shiftTimetableWeek(1)">Next week →</button><button class="btn ghost" onclick="timetableWeek=today;render()">This week</button><button class="btn" onclick="window.print()">Print timetable</button></div><p class="muted small">Showing ${esc(days[0].label)} – ${esc(days[6].label)} · 09:00–21:00, with 30-minute guide lines. Back-to-back lessons are separate blocks. Lessons do not automatically repeat every week.</p><div class="timetable-scroll"><div class="timegrid"><div class="timegrid-head">Time</div>${days.map(d=>`<div class="timegrid-head">${d.name}<span class="timetable-date">${d.label}</span></div>`).join('')}<div class="timegrid-times" style="height:${(endMinute-startMinute)*pxPerMinute}px">${slots.map(t=>`<div class="timegrid-time" style="top:${(t-startMinute)*pxPerMinute}px">${fmt(t)}</div>`).join('')}</div>${days.map(d=>`<div class="timegrid-day" style="height:${(endMinute-startMinute)*pxPerMinute}px">${blocksForDay(d)}</div>`).join('')}</div></div><p class="small muted">To add or edit lessons, open <button class="inline-link" onclick="go('schedule')">Class schedule</button>. Classes outside 09:00–21:00 remain in your schedule list but are not shown in this timetable.</p>`;
+ return `${heading('Weekly timetable','Your lessons displayed at their actual start times and durations.')}<div class="toolbar timetable-controls"><button class="btn secondary" onclick="shiftTimetableWeek(-1)">← Previous week</button><label class="small">Week of <input aria-label="Choose timetable week" type="date" value="${esc(timetableWeek)}" onchange="setTimetableWeek(this.value)"></label><button class="btn secondary" onclick="shiftTimetableWeek(1)">Next week →</button><button class="btn ghost" onclick="timetableWeek=today;render()">This week</button><button class="btn" onclick="window.print()">Print timetable</button></div><p class="muted small">Showing ${esc(days[0].label)} – ${esc(days[6].label)} · 09:00–21:00, with 30-minute guide lines. Back-to-back lessons are separate blocks. Lessons do not automatically repeat every week.</p><div class="timetable-scroll"><div class="timegrid"><div class="timegrid-head">Time</div>${days.map(d=>`<div class="timegrid-head">${d.name}<span class="timetable-date">${d.label}</span></div>`).join('')}<div class="timegrid-times" style="height:${(endMinute-startMinute)*pxPerMinute}px">${slots.map(t=>`<div class="timegrid-time" style="top:${(t-startMinute+15)*pxPerMinute}px">${fmt(t)}</div>`).join('')}</div>${days.map(d=>`<div class="timegrid-day" style="height:${(endMinute-startMinute)*pxPerMinute}px">${blocksForDay(d)}</div>`).join('')}</div></div><p class="small muted">To add or edit lessons, open <button class="inline-link" onclick="go('schedule')">Class schedule</button>. Classes outside 09:00–21:00 remain in your schedule list but are not shown in this timetable.</p>`;
 }
 
 const action=(txt,fn)=>`<button class="btn secondary" onclick="${fn}">${txt}</button>`;
@@ -275,7 +275,7 @@ function chooseSubject(i){subject=allSubjects()[i];render()}
 function addSubject(){
  const name=prompt('New subject name (for example, Chemistry):');
  if(name===null)return;
- const clean=name.trim().replace(/\\s+/g,' ');
+ const clean=name.trim().replace(/\s+/g,' ');
  if(!clean){alert('Please enter a subject name.');return}
  if(clean.length>60){alert('Keep the subject name under 60 characters.');return}
  if(allSubjects().some(x=>x.toLowerCase()===clean.toLowerCase())){alert('That subject already exists.');return}

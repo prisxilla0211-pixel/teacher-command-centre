@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teacher Command Centre · Private Cloud</title><style>
+:root{--bg:#fcf7f4;--panel:#fffdfa;--rose:#b76e79;--pink:#f5dfe2;--dark:#493e42;--muted:#85777c;--border:#ebdfe0;--green:#507e6b}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--dark);font:14px/1.55 system-ui,'Segoe UI',sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.layout{display:none;min-height:100vh}.layout.ready{display:flex}.side{width:240px;background:#f7e9e8;border-right:1px solid var(--border);padding:25px 14px;position:sticky;top:0;height:100vh;overflow:auto}.brand{font-family:Georgia,serif;font-size:25px;line-height:1.15;color:#8f5662;margin:6px 10px 5px}.sub{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:0 10px 25px}.nav{width:100%;text-align:left;border:0;background:transparent;border-radius:10px;padding:11px;color:var(--dark);margin:2px 0}.nav:hover,.nav.active{background:#fff9f7;color:#9b5363}.main{flex:1;min-width:0;padding:30px 4vw 80px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.eyebrow{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--rose)}h1,h2,h3{font-family:Georgia,serif;font-weight:500}h1{font-size:37px;margin:5px 0 8px}h2{font-size:24px}h3{font-size:19px;margin:0 0 12px}.muted{color:var(--muted)}.hero{background:linear-gradient(120deg,#f6e2e3,#fff9f4);border:1px solid var(--border);border-radius:18px;padding:25px;margin:20px 0}.cards{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:14px;margin:22px 0}.card,.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px}.metric{font:30px Georgia,serif;color:#9c5b69}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px}.btn{border:0;background:var(--rose);color:white;padding:10px 15px;border-radius:9px}.btn.secondary{background:#f5e4e5;color:#804e5a}.btn.ghost{background:transparent;color:#a25363;border:1px solid var(--border)}.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:15px 0}.tablewrap{overflow:auto;background:white;border:1px solid var(--border);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:670px}th,td{text-align:left;padding:12px;border-bottom:1px solid #f2e8e8;vertical-align:top}th{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#8b6972;background:#fff8f7}tr:last-child td{border:0}.chip{display:inline-block;background:#f8e8e9;color:#935c69;padding:3px 9px;border-radius:30px;font-size:12px}.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}.field label{font-size:12px;font-weight:600;color:#745961}input,select,textarea{border:1px solid #dfcdd0;background:white;border-radius:8px;padding:10px;width:100%;color:var(--dark)}textarea{min-height:75px;resize:vertical}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.full{grid-column:1/-1}.modalback{position:fixed;inset:0;background:#30212688;display:flex;align-items:center;justify-content:center;z-index:10;padding:16px}.modal{background:#fffdfa;border-radius:17px;width:min(720px,100%);max-height:90vh;overflow:auto;padding:24px;box-shadow:0 20px 70px #3a232533}.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.day{min-height:78px;border:1px solid var(--border);border-radius:9px;padding:6px;background:white;font-size:12px;overflow:hidden}.day.holiday{background:#ffedf0}.day.today{outline:2px solid var(--rose)}.day b{display:block}.event{font-size:10px;line-height:1.3;margin-top:3px;color:#995061}.weekhead{text-align:center;font-size:11px;color:var(--muted);padding:6px}.subjects{display:flex;gap:8px;flex-wrap:wrap}.subjects button{border:1px solid var(--border);background:white;padding:9px 13px;border-radius:9px}.subjects button.selected{background:#f4dadd;border-color:#c98796}.empty{padding:28px;text-align:center;color:var(--muted)}.small{font-size:12px}.notice{background:#fff4e7;padding:12px 15px;border-radius:9px;color:#806347}.mobilemenu{display:none}@media(max-width:850px){.side{width:195px}.cards{grid-template-columns:repeat(2,1fr)}.twocol{grid-template-columns:1fr}.main{padding:20px}.day{min-height:65px}}@media(max-width:600px){.layout{display:block}.side{position:static;width:100%;height:auto;padding:12px}.brand{font-size:21px}.sub{margin-bottom:8px}.navbox{display:flex;overflow:auto}.nav{white-space:nowrap;width:auto}.main{padding:15px}.cards{grid-template-columns:repeat(2,1fr)}h1{font-size:29px}.formgrid{grid-template-columns:1fr}.day{min-height:54px;padding:3px;font-size:10px}.event{font-size:8px}}/* Mobile layout correction: override the more specific .layout.ready desktop rule. */
+@media(max-width:600px){
+ html,body{width:100%;max-width:100%;overflow-x:hidden}
+ .layout.ready{display:block;width:100%}
+ .side{position:relative;top:auto;width:100%;height:auto;max-height:none;overflow:visible;border-right:0;border-bottom:1px solid var(--border);padding:16px 14px 12px}
+ .brand{margin:0 4px 4px;font-size:23px}
+ .sub{margin:0 4px 10px}
+ .navbox{display:flex;gap:5px;overflow-x:auto;overflow-y:hidden;max-width:100%;padding:3px 0 7px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+ .nav{flex:0 0 auto;white-space:nowrap;width:auto;min-height:40px;padding:9px 12px;margin:0}
+ .side>p{margin:8px 4px!important;font-size:11px}
+ .main{display:block;width:100%;min-width:0;padding:18px 14px 85px}
+ .top{display:flex;flex-direction:column;align-items:stretch;gap:10px}
+ .top>div{min-width:0}
+ .top>div:last-child{display:flex;flex-wrap:wrap;gap:7px}
+ .top .btn{flex:0 1 auto;margin:0;padding:9px 11px}
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .twocol{grid-template-columns:minmax(0,1fr)}
+ .panel,.card{min-width:0;padding:14px}
+ h1{font-size:29px;line-height:1.2;overflow-wrap:anywhere}
+ h2{font-size:23px;overflow-wrap:anywhere}
+ .hero{padding:18px}
+ .toolbar{align-items:stretch}
+ .toolbar>input,.toolbar>select{min-width:0}
+ .tablewrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+ .calendar{gap:3px}
+ .weekhead{font-size:10px;padding:4px 0}
+ .day{min-width:0;min-height:57px;padding:3px;font-size:10px;overflow-wrap:anywhere}
+ .day .event{font-size:9px;overflow-wrap:anywhere}
+ .modal{padding:16px;max-height:calc(100dvh - 24px)}
+ .formgrid{grid-template-columns:minmax(0,1fr)}
+}
+@media print{.side,.toolbar,.top button{display:none!important}.main{padding:0}.layout{display:block}}
+#authGate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(145deg,#f7e4e7,#fffaf6)}#authGate .authcard{max-width:480px;width:100%;padding:32px;background:#fffdfa;border:1px solid #ead6db;border-radius:20px;box-shadow:0 18px 55px #a96a7c20}#authGate h1{font-size:32px}#syncState{font-size:12px;color:#8c6270;margin-left:8px}button:disabled{opacity:.5;cursor:not-allowed}
+
+.mobilemenu{display:none}
+.subjects .add-subject{background:#b76e79;color:#fff;border-color:#b76e79;font-weight:600}
+.btn{max-width:100%;white-space:normal;overflow-wrap:normal;word-break:normal}
+.toolbar .btn{min-width:max-content}
+.tablewrap{width:100%;min-width:0}
+@media(max-width:600px){
+ .mobilemenu{display:flex;width:100%;justify-content:space-between;align-items:center;border:1px solid #d8b9c0;background:#fff9f7;color:#854d5b;border-radius:11px;padding:12px 14px;font-weight:650;margin:10px 0 0}
+ .side .navbox{display:none}
+ .side.menu-open .navbox{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;overflow:visible;padding:10px 0 4px}
+ .side .nav{white-space:normal;min-width:0;text-align:left;border:1px solid #eddcde;background:#fffaf8;overflow-wrap:break-word}
+ .side .nav.active{background:#efd5db}
+ .side>p{margin-top:10px!important}
+ .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+ .toolbar .btn{min-width:0;flex-shrink:0;white-space:nowrap;padding:11px 13px}
+ .subjects{gap:7px}
+ .subjects button{min-height:42px;white-space:normal}
+ .tablewrap{overflow-x:auto;overscroll-behavior-x:contain}
+ .tablewrap:before{content:"Swipe sideways to see all columns →";display:block;font-size:11px;color:#856c75;padding:7px 10px;background:#fff8f7}
+ .top>div:last-child{max-width:100%}
+}
+
+/* Full-width, readable record controls and scrollable tables on all screens */
+.main,.main #view{min-width:0;max-width:100%}
+.toolbar{min-width:0}
+.toolbar .btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;white-space:normal;overflow-wrap:normal;word-break:keep-all;text-align:center;flex-shrink:0}
+.tablewrap{display:block;overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+.tablewrap table{width:max-content;min-width:100%}
+.tablewrap th,.tablewrap td{white-space:normal;min-width:100px;overflow-wrap:normal;word-break:normal}
+.tablewrap th:last-child,.tablewrap td:last-child{min-width:110px}
+.timetable-scroll{overflow-x:auto;max-width:100%;border:1px solid var(--border);border-radius:14px;background:#fff;overscroll-behavior-x:contain}
+.timetable-grid{width:100%;min-width:960px;table-layout:fixed;border-collapse:separate;border-spacing:3px;background:#fffaf9}
+.timetable-grid th,.timetable-grid td{border:1px solid #e9d7db;border-radius:9px;padding:9px;vertical-align:top}
+.timetable-grid thead th{background:#f6e6e8;text-align:center;color:#804e5a}
+.timetable-grid thead th:first-child,.timetable-grid tbody th{width:76px}
+.timetable-grid tbody th{background:#fff1f1;text-align:center;white-space:nowrap}
+.timetable-grid tbody td{height:72px;background:#fff}
+.timetable-date{display:block;font-size:10px;font-weight:400;color:#90777e}
+.timetable-event{background:#f7e4e8;border-left:3px solid var(--rose);border-radius:6px;padding:6px;margin:2px 0 6px;overflow-wrap:anywhere;font-size:11px}
+.timetable-event b,.timetable-event span{display:block}
+.inline-link{background:transparent;border:0;color:#a25363;text-decoration:underline;padding:0}
+.timetable-controls label{display:flex;align-items:center;gap:8px}
+.timetable-controls input{width:160px}
+@media(max-width:600px){
+ .toolbar .btn{min-width:0;max-width:100%;padding:10px 13px}
+ .tablewrap table{min-width:720px}
+ .tablewrap:before{position:sticky;left:0}
+ .timetable-scroll:before{content:"Swipe sideways to see the full week →";display:block;padding:9px;font-size:12px;color:#876e75}
+ .timetable-grid{min-width:890px}
+}
+@media print{
+ body{background:white}
+ .layout.ready{display:block}
+ .side,.top,.timetable-controls,.inline-link{display:none!important}
+ .main{padding:0!important}
+ .timetable-scroll{overflow:visible;border:0}
+ .timetable-grid{min-width:0;font-size:9px}
+ .timetable-grid th,.timetable-grid td{padding:3px}
+ .timetable-event{font-size:8px}
+ @page{size:A4 landscape;margin:9mm}
+}
+
+/* Accurate half-hour weekly timetable */
+.timegrid{display:grid;grid-template-columns:72px repeat(7,minmax(130px,1fr));min-width:1060px;gap:3px;padding:4px;background:#fffaf9}
+.timegrid-head{background:#f6e6e8;border:1px solid #e7cfd5;border-radius:8px;text-align:center;padding:12px 4px;color:#804e5a;font-size:12px;font-weight:700}
+.timegrid-times,.timegrid-day{position:relative;border:1px solid #e7cfd5;border-radius:8px;background-color:white;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 46px,#ecdde0 47px,#ecdde0 48px);background-size:100% 48px}
+.timegrid-times{background-color:#fff2f3}
+.timegrid-time{position:absolute;left:0;right:0;text-align:center;transform:translateY(-50%);font-size:11px;color:#805261;font-variant-numeric:tabular-nums}
+.timed-block{position:absolute;box-sizing:border-box;overflow:hidden;margin:0;padding:6px;z-index:1;font-size:11px;line-height:1.35}
+.timed-block span,.timed-block b{display:block;overflow-wrap:anywhere}
+@media print{.timegrid{min-width:0;grid-template-columns:50px repeat(7,minmax(0,1fr));gap:1px}.timegrid-head{padding:3px}.timegrid-time{font-size:7px}.timed-block{font-size:7px;padding:2px}.timegrid-times,.timegrid-day{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="./config.js"></script></head><body><div id="authGate"><div class="authcard"><div class="eyebrow">PRIVATE TEACHER PORTAL</div><h1>✿ Teacher Command Centre</h1><p class="muted">Your Blush & Ivory teaching workspace, safely synchronised across your devices.</p><div id="authContent">Connecting…</div></div></div><div class="layout"><aside class="side"><div class="brand">✿ Teacher<br>Command Centre</div><div class="sub">Dream Education · Mont Kiara</div><button class="mobilemenu" id="menuToggle" aria-controls="nav" aria-expanded="false" onclick="toggleMenu()">☰ Menu <span aria-hidden="true">⌄</span></button><div class="navbox" id="nav"></div><p class="small muted" style="margin:20px 10px">Blush & Ivory · Any year<br>Records synchronised with your private cloud. Export backups regularly.</p></aside><main class="main"><div class="top"><div><div class="eyebrow">My teaching workspace / Kuala Lumpur</div><span id="syncState">Cloud ready</span></div><div><button class="btn secondary" onclick="backup()">↓ Export backup</button> <button class="btn ghost" onclick="document.getElementById('import').click()">↑ Import</button><input hidden id="import" type="file" accept=".json" onchange="restore(event)"> <button class="btn ghost" onclick="signOut()">Sign out</button></div></div><div id="view"></div></main></div><div id="overlay"></div><script>
+const subjects=['English','Mathematics','Science','Biology','Physics','IELTS'];
+const allSubjects=()=>[...subjects,...(Array.isArray(db.customSubjects)?db.customSubjects:[])];
+const navs=[['dashboard','⌂ Dashboard'],['profile','♡ Teacher profile'],['calendar','▦ All-year Calendar'],['schedule','◷ Class schedule'],['timetable','▦ Weekly timetable'],['students','♙ Student directory'],['subjects','▤ Subject hubs'],['attendance','✓ Attendance'],['progress','◈ Learning progress'],['homework','✎ Homework'],['assessments','★ Assessments'],['resources','▣ Resource library'],['tasks','☑ Teacher’s Zone'],['meetings','☷ Meetings'],['settings','⚙ Backup & help']];
+const schemas={
+students:[['name','Student name','text',1],['age','Age','number'],['grade','Year / grade','text'],['curriculum','Curriculum','text'],['subjects','Subjects taken (comma-separated)','text'],['style','Learning preferences / style','textarea'],['strengths','Strengths','textarea'],['needs','Areas to improve','textarea'],['goals','Learning goals','textarea'],['remarks','Private teaching notes','textarea']],
+schedule:[['date','Lesson date','date',1],['start','Start time','time',1],['duration','Duration (minutes)','select','', ['60','90','45','120']],['studentId','Student','student'],['subject','Subject','subject'],['room','Classroom / online link','text'],['topic','Topic','text'],['status','Lesson status','select','',['Scheduled','Completed','Cancelled','Rescheduled']],['notes','Lesson notes','textarea']],
+attendance:[['date','Date','date',1],['studentId','Student','student',1],['subject','Subject','subject'],['status','Attendance','select','',['Present','Absent','Late','Excused']],['notes','Notes','textarea']],
+progress:[['studentId','Student','student',1],['subject','Subject','subject'],['topic','Topic / learning outcome','text',1],['milestone','Current milestone','text'],['status','Mastery','select','',['Not started','Developing','Secure','Needs revision']],['schoolGrade','Latest school grade','text'],['improve','Key areas to improve','textarea'],['next','Next step','textarea'],['updated','Reviewed on','date']],
+homework:[['studentId','Student','student',1],['subject','Subject','subject'],['title','Homework / assignment','text',1],['given','Date assigned','date'],['due','Due date','date'],['submitted','Submitted on','date'],['status','Status','select','',['Assigned','Submitted','Late','Marked','Missing']],['feedback','Feedback','textarea']],
+assessments:[['studentId','Student','student',1],['subject','Subject','subject'],['date','Assessment date','date'],['title','Assessment','text',1],['score','Score / result','text'],['grade','Grade','text'],['notes','Feedback / targets','textarea']],
+resources:[['subject','Subject','subject'],['kind','Resource type','select','',['Worksheet','Slides','Textbook','Reading','Website','Video','Equipment','Reference']],['title','Resource title','text',1],['link','URL or file reference','text'],['topic','Topic','text'],['notes','Notes','textarea']],
+scheme:[['subject','Subject','subject'],['grade','Year / grade','text'],['term','Term / period','text'],['topic','Unit / topic','text',1],['objectives','Learning objectives','textarea'],['weeks','Week(s)','text'],['status','Status','select','',['Planned','In progress','Completed']],['resources','Resources','textarea']],
+plans:[['subject','Subject','subject'],['studentId','Student (optional)','student'],['date','Lesson date','date'],['duration','Duration (minutes)','select','',['60','90','45','120']],['topic','Lesson topic','text',1],['objectives','Learning objectives','textarea'],['starter','Starter / recap','textarea'],['activities','Main activities','textarea'],['checks','Assessment for learning','textarea'],['homework','Homework / follow-up','textarea'],['reflection','Reflection / next lesson','textarea']],
+tasks:[['title','Task','text',1],['period','Planning horizon','select','',['Daily','Weekly','Monthly']],['date','Due date','date'],['priority','Priority','select','',['Low','Medium','High']],['status','Status','select','',['To do','In progress','Done']],['notes','Notes','textarea']],
+meetings:[['date','Date','date'],['time','Time','time'],['title','Meeting / agenda','text',1],['attendees','Attendees','text'],['notes','Notes / decisions','textarea'],['actions','Action points','textarea']],
+reflections:[['date','Date','date'],['subject','Subject','subject'],['wins','What worked well?','textarea'],['challenges','What could improve?','textarea'],['next','Try next time','textarea']],
+profile:[['name','Teacher name','text'],['start','Start date','date'],['year','Academic year','text'],['phone','Work contact number','text'],['email','Work email','text'],['centre','Centre','text'],['subjects','Subjects taught','text'],['classes','Classes / year groups','text'],['notes','Notes','textarea']]
+};
+const seed={students:[],schedule:[],attendance:[],progress:[],homework:[],assessments:[],resources:[],scheme:[],plans:[],tasks:[],meetings:[],reflections:[],customHolidays:[],customSubjects:[],profile:[{id:'profile',centre:'Dream Education Centre, Mont Kiara',year:'2026–2027',subjects:subjects.join(', ')}]};
+let db=structuredClone(seed);
+for(let k of Object.keys(seed))if(!Array.isArray(db[k]))db[k]=structuredClone(seed[k]);
+let client=null, currentUser=null, lastSaved='', saving=false, dirty=false, saveTimer=null, refreshTimer=null;
+const syncLabel=(s)=>{let el=document.getElementById('syncState');if(el)el.textContent=s};
+const save=()=>{dirty=true;syncLabel('Unsaved changes…');clearTimeout(saveTimer);saveTimer=setTimeout(pushCloud,500)};
+async function pushCloud(){
+ if(!currentUser||saving)return;
+ saving=true;
+ try{
+  let snapshot=JSON.stringify(db);
+  const {error}=await client.from('planner_data').upsert({user_id:currentUser.id,payload:JSON.parse(snapshot),updated_at:new Date().toISOString()},{onConflict:'user_id'});
+  if(error)throw error;
+  lastSaved=snapshot;
+  if(JSON.stringify(db)===snapshot){dirty=false;syncLabel('✓ Synced to cloud')}else{dirty=true;setTimeout(pushCloud,0)}
+ }catch(e){syncLabel('⚠ Sync failed — export backup');alertOnce('Cloud save failed: '+e.message)}
+ finally{saving=false;if(dirty&&JSON.stringify(db)!==lastSaved)setTimeout(pushCloud,1500)}
+}
+let alertShown=false;function alertOnce(msg){if(!alertShown){alertShown=true;console.error(msg)}}
+async function pullCloud(){
+ if(!currentUser||dirty||saving||document.querySelector('.modalback'))return;
+ const {data,error}=await client.from('planner_data').select('payload,updated_at').eq('user_id',currentUser.id).maybeSingle();
+ if(error){syncLabel('⚠ Could not load cloud records');return}
+ if(data?.payload){
+  let next=data.payload;
+  if(!next||!Array.isArray(next.students))return;
+  let encoded=JSON.stringify(next);
+  if(encoded!==JSON.stringify(db)){db=next;for(let k of Object.keys(seed))if(!Array.isArray(db[k]))db[k]=structuredClone(seed[k]);render()}
+  lastSaved=JSON.stringify(db);
+ }else{lastSaved=JSON.stringify(db)}
+ syncLabel('✓ Synced to cloud');
+}
+async function signOut(){
+ clearInterval(refreshTimer);clearTimeout(saveTimer);
+ if(dirty)await pushCloud();
+ await client.auth.signOut();currentUser=null;db=structuredClone(seed);document.querySelector('.layout').classList.remove('ready');document.getElementById('authGate').style.display='flex';showLogin();
+}
+async function emailLogin(e){
+ e.preventDefault();
+ const form=e.target,button=form.querySelector('button[type="submit"]');
+ button.disabled=true;button.textContent='Signing in…';
+ const email=form.elements.email.value.trim(),password=form.elements.password.value;
+ try{
+  const {error}=await client.auth.signInWithPassword({email,password});
+  if(error)throw error;
+  // The signed-in user must still be approved in app_access before seeing records.
+  await boot();
+ }catch(err){showLogin(err.message||'Could not sign in.');}
+ finally{button.disabled=false}
+}
+function showLogin(msg=''){
+ document.getElementById('authContent').innerHTML=`${msg?'<p class="notice">'+esc(msg)+'</p>':''}<form onsubmit="emailLogin(event)">
+ <div class="field"><label for="loginEmail">Email address</label><input id="loginEmail" name="email" type="email" autocomplete="username" required></div>
+ <div class="field"><label for="loginPassword">Password</label><input id="loginPassword" name="password" type="password" autocomplete="current-password" required minlength="8"></div>
+ <button class="btn" type="submit">Sign in securely</button></form>
+ <p class="small muted">Private access only. There is no public registration or password reset on this website. Your account must be created in Supabase first.</p>`;
+}
+async function boot(){
+ const config=window.TCC_CONFIG||{};
+ if(!config.supabaseUrl||!config.supabaseAnonKey||config.supabaseUrl.includes('YOUR_PROJECT')){
+  document.getElementById('authContent').innerHTML='<p class="notice">Setup required: edit config.js with your Supabase project URL and publishable/anon key. See README.</p>';return;
+ }
+ if(!window.supabase){document.getElementById('authContent').textContent='Could not load Supabase library. Check your connection.';return}
+ client=window.supabase.createClient(config.supabaseUrl,config.supabaseAnonKey,{auth:{flowType:'pkce',detectSessionInUrl:true,persistSession:true,autoRefreshToken:true}});
+ const {data:{session},error}=await client.auth.getSession();
+ if(error){showLogin(error.message);return}
+ if(!session){showLogin();return}
+ currentUser=session.user;
+ const {data:approved,error:approvalError}=await client.from('app_access').select('user_id').eq('user_id',currentUser.id).maybeSingle();
+ if(approvalError||!approved){
+  document.getElementById('authContent').innerHTML=`<p class="notice">Account not yet approved. Your Supabase user ID is:</p><p style="overflow-wrap:anywhere"><code>${esc(currentUser.id)}</code></p><p class="small">In Supabase SQL Editor, add this ID to app_access using the one-time approval query in README. This screen is only for setup and reveals no student data.</p><button class="btn secondary" onclick="signOut()">Sign out</button>`;return;
+ }
+ await pullCloud();
+ document.getElementById('authGate').style.display='none';document.querySelector('.layout').classList.add('ready');render();
+ refreshTimer=setInterval(()=>{if(!document.hidden)pullCloud()},20000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)pullCloud()});
+}
+let page='dashboard',subject='English',tab='scheme',month=new Date().getMonth(),year=new Date().getFullYear();
+const holidayRows=`2026-01-01|New Year's Day;2026-02-01|Federal Territory Day / Thaipusam;2026-02-02|Replacement holiday;2026-02-03|Replacement holiday (verify);2026-02-17|Chinese New Year;2026-02-18|Chinese New Year (day 2);2026-03-07|Nuzul Al-Quran;2026-03-20|Additional Aidilfitri holiday;2026-03-21|Hari Raya Aidilfitri;2026-03-22|Hari Raya Aidilfitri (day 2);2026-03-23|Replacement holiday;2026-05-01|Labour Day;2026-05-27|Hari Raya Aidiladha;2026-05-31|Wesak Day;2026-06-01|King's Birthday;2026-06-02|Replacement holiday (verify);2026-06-17|Awal Muharram;2026-08-25|Prophet Muhammad's Birthday;2026-08-31|National Day;2026-09-16|Malaysia Day;2026-11-08|Deepavali;2026-11-09|Replacement holiday;2026-12-25|Christmas;2027-01-01|New Year's Day;2027-01-22|Thaipusam;2027-02-01|Federal Territory Day;2027-02-06|Chinese New Year;2027-02-07|Chinese New Year (day 2);2027-02-08|Replacement holiday (provisional);2027-02-24|Nuzul Al-Quran;2027-03-10|Hari Raya Aidilfitri (provisional);2027-03-11|Hari Raya Aidilfitri (day 2, provisional);2027-05-01|Labour Day;2027-05-17|Hari Raya Aidiladha (provisional);2027-05-20|Wesak Day (provisional);2027-06-06|Awal Muharram (provisional);2027-06-07|King's Birthday;2027-08-15|Prophet Muhammad's Birthday (provisional);2027-08-31|National Day;2027-09-16|Malaysia Day;2027-10-28|Deepavali (provisional);2027-12-25|Christmas`;
+const holidays=holidayRows.split(';').map(x=>{let [date,name]=x.split('|');return {date,name}});
+const holidayCache=new Map();
+let holidayLoading=false,holidayError='';const holidayAttempted=new Set();
+async function fetchHolidays(targetYear,force=false){
+ if(!Number.isInteger(targetYear)||targetYear<2000||targetYear>2100){holidayError='Automatic holiday information is only supported for years 2000–2100. You can still add custom dates.';render();return}
+ if(holidayLoading)return;
+ const existing=holidayCache.get(targetYear);
+ if(existing&&!force&&Date.now()-existing.at<24*60*60*1000)return;
+ holidayLoading=true;holidayAttempted.add(targetYear);holidayError='';render();
+ try{
+  const res=await fetch('/.netlify/functions/holidays?year='+targetYear,{headers:{'Accept':'application/json'}});
+  if(!res.ok)throw Error('Holiday service returned '+res.status);
+  const data=await res.json();
+  if(!Array.isArray(data.holidays))throw Error('Unexpected holiday response');
+  holidayCache.set(targetYear,{at:Date.now(),items:data.holidays,source:data.source||'Malaysia Holiday API'});
+ }catch(err){holidayError='Could not retrieve current holiday information ('+err.message+').'+(targetYear===2026||targetYear===2027?' Showing bundled reference dates instead.':' Add manual dates if needed.')}
+ finally{holidayLoading=false;render()}
+}
+function holidaysForYear(y){
+ const fetched=holidayCache.get(y);
+ return fetched?fetched.items:(y===2026||y===2027?holidays.filter(x=>x.date.startsWith(y+'-')).map(x=>({...x,provisional:true})):[]);
+}
+function holidayStatus(){
+ const cached=holidayCache.get(year);
+ return cached?'Live holiday feed: '+cached.source+' · last checked '+new Date(cached.at).toLocaleString('en-GB')+(holidayError?' · '+holidayError:''):
+ holidayLoading?'Loading Kuala Lumpur holidays…':
+ holidayError||'Holiday dates have not been retrieved for this year.';
+}
+function addHoliday(e){e.preventDefault();const fd=new FormData(e.target);const date=String(fd.get('date')||''),name=String(fd.get('name')||'').trim();if(!date||!name)return;db.customHolidays.push({id:'h'+Date.now(),date,name});save();render()}
+function deleteHoliday(id){if(!confirm('Remove this custom calendar date?'))return;db.customHolidays=db.customHolidays.filter(h=>h.id!==id);save();render()}
+
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nice=s=>s.replace(/([A-Z])/g,' $1').replace(/^./,c=>c.toUpperCase());
+const studentName=id=>db.students.find(x=>x.id===id)?.name||'(unassigned)';
+const dateNow=()=>new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Kuala_Lumpur'});
+const today=dateNow();
+const dayFromDate=date=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(date||''))return '—';const [y,m,d]=date.split('-').map(Number);const check=new Date(y,m-1,d);if(check.getFullYear()!==y||check.getMonth()!==m-1||check.getDate()!==d)return '—';return check.toLocaleDateString('en-GB',{weekday:'long'})};
+let timetableWeek=today;
+function weekStart(date){const d=new Date((date||today)+'T12:00:00');if(Number.isNaN(d.getTime()))return today;const offset=(d.getDay()+6)%7;d.setDate(d.getDate()-offset);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+function shiftTimetableWeek(n){const d=new Date(weekStart(timetableWeek)+'T12:00:00');d.setDate(d.getDate()+n*7);timetableWeek=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');render()}
+function setTimetableWeek(value){if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return;timetableWeek=value;render()}
+function formatClock(t){return /^\d{2}:\d{2}$/.test(t||'')?t:'—'}
+function weeklyTimetable(){
+ const monday=weekStart(timetableWeek);
+ const days=Array.from({length:7},(_,i)=>{let d=new Date(monday+'T12:00:00');d.setDate(d.getDate()+i);return {date:[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-'),name:d.toLocaleDateString('en-GB',{weekday:'short'}),label:d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}});
+ const entries=db.schedule.filter(x=>days.some(d=>d.date===x.date)&&x.status!=='Cancelled');
+ const startMinute=9*60,endMinute=21*60,pxPerMinute=1.6;
+ const minuteOf=t=>{const m=/^(\d{1,2}):(\d{2})$/.exec(t||'');if(!m)return null;const h=+m[1],min=+m[2];return h<24&&min<60?h*60+min:null};
+ const fmt=min=>String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0');
+ const slots=Array.from({length:(endMinute-startMinute)/30},(_,i)=>startMinute+i*30);
+ const blocksForDay=day=>{
+  const lessons=entries.filter(x=>x.date===day.date).map(x=>({lesson:x,start:minuteOf(x.start),duration:Number(x.duration)||60})).filter(x=>x.start!==null&&x.start<endMinute&&x.start+x.duration>startMinute).sort((a,b)=>a.start-b.start);
+  // Side-by-side columns for genuine overlapping lessons; touching lessons stay full width.
+  const placed=[];
+  for(const item of lessons){let lane=0;while(placed.some(p=>p.lane===lane&&item.start<p.start+p.duration&&p.start<item.start+item.duration))lane++;placed.push({...item,lane})}
+  return placed.map(item=>{
+   const active=placed.filter(p=>p.start<item.start+item.duration&&item.start<p.start+p.duration);
+   const lanes=Math.max(1,...active.map(p=>p.lane+1));
+   const top=(Math.max(item.start,startMinute)-startMinute)*pxPerMinute;
+   const height=(Math.min(item.start+item.duration,endMinute)-Math.max(item.start,startMinute))*pxPerMinute;
+   const x=item.lesson;
+   return `<div class="timetable-event timed-block" style="top:${top}px;height:${Math.max(22,height-2)}px;left:calc(${item.lane*100/lanes}% + 3px);width:calc(${100/lanes}% - 6px)" title="${esc(fmt(item.start))}–${esc(fmt(item.start+item.duration))} · ${esc(x.subject||'Lesson')}"><b>${esc(fmt(item.start))}–${esc(fmt(item.start+item.duration))}</b><span>${esc(x.subject||'Lesson')}</span><span>${esc(studentName(x.studentId))}</span>${x.room?`<span>${esc(x.room)}</span>`:''}</div>`;
+  }).join('');
+ };
+ return `${heading('Weekly timetable','Your lessons displayed at their actual start times and durations.')}<div class="toolbar timetable-controls"><button class="btn secondary" onclick="shiftTimetableWeek(-1)">← Previous week</button><label class="small">Week of <input aria-label="Choose timetable week" type="date" value="${esc(timetableWeek)}" onchange="setTimetableWeek(this.value)"></label><button class="btn secondary" onclick="shiftTimetableWeek(1)">Next week →</button><button class="btn ghost" onclick="timetableWeek=today;render()">This week</button><button class="btn" onclick="window.print()">Print timetable</button></div><p class="muted small">Showing ${esc(days[0].label)} – ${esc(days[6].label)} · 09:00–21:00, with 30-minute guide lines. Back-to-back lessons are separate blocks. Lessons do not automatically repeat every week.</p><div class="timetable-scroll"><div class="timegrid"><div class="timegrid-head">Time</div>${days.map(d=>`<div class="timegrid-head">${d.name}<span class="timetable-date">${d.label}</span></div>`).join('')}<div class="timegrid-times" style="height:${(endMinute-startMinute)*pxPerMinute}px">${slots.map(t=>`<div class="timegrid-time" style="top:${(t-startMinute+15)*pxPerMinute}px">${fmt(t)}</div>`).join('')}</div>${days.map(d=>`<div class="timegrid-day" style="height:${(endMinute-startMinute)*pxPerMinute}px">${blocksForDay(d)}</div>`).join('')}</div></div><p class="small muted">To add or edit lessons, open <button class="inline-link" onclick="go('schedule')">Class schedule</button>. Classes outside 09:00–21:00 remain in your schedule list but are not shown in this timetable.</p>`;
+}
+
+const action=(txt,fn)=>`<button class="btn secondary" onclick="${fn}">${txt}</button>`;
+function toggleMenu(){const open=document.querySelector('.side').classList.toggle('menu-open');document.getElementById('menuToggle').setAttribute('aria-expanded',String(open))}
+function go(p){page=p;document.querySelector('.side').classList.remove('menu-open');document.getElementById('menuToggle').setAttribute('aria-expanded','false');render()}
+function chooseSubject(i){subject=allSubjects()[i];render()}
+function addSubject(){
+ const name=prompt('New subject name (for example, Chemistry):');
+ if(name===null)return;
+ const clean=name.trim().replace(/\s+/g,' ');
+ if(!clean){alert('Please enter a subject name.');return}
+ if(clean.length>60){alert('Keep the subject name under 60 characters.');return}
+ if(allSubjects().some(x=>x.toLowerCase()===clean.toLowerCase())){alert('That subject already exists.');return}
+ db.customSubjects.push(clean);subject=clean;tab='scheme';save();render();
+}
+function render(){document.getElementById('nav').innerHTML=navs.map(([p,n])=>`<button class="nav ${page===p?'active':''}" onclick="go('${p}')">${n}</button>`).join('');let v=document.getElementById('view');v.innerHTML=pages[page]();if(page==='calendar'&&!holidayLoading&&!holidayCache.has(year)&&!holidayAttempted.has(year)&&year>=2000&&year<=2100){queueMicrotask(()=>fetchHolidays(year))}window.scrollTo(0,0)}
+function heading(t,desc){return `<h1>${esc(t)}</h1><p class="muted">${desc}</p>`}
+function stats(){let scheduled=db.schedule.filter(x=>x.date===today&&x.status!=='Cancelled');return `<div class="cards">${[['Students',db.students.length],['Classes today',scheduled.length],['Tasks pending',db.tasks.filter(x=>x.status!=='Done').length],['Homework to chase',db.homework.filter(x=>['Assigned','Missing','Late'].includes(x.status)).length]].map(([a,b])=>`<div class="card"><div class="metric">${b}</div><span class="muted">${a}</span></div>`).join('')}</div>`}
+function recordTable(type,filter=()=>true){let cols=schemas[type].filter(f=>!['textarea'].includes(f[2])).slice(0,5);if(type==='schedule')cols.splice(1,0,['__day','Day','computed']);const rows=db[type].filter(filter).sort((a,b)=>(b.date||b.given||'').localeCompare(a.date||a.given||''));const addLabels={schedule:'schedule',students:'student',attendance:'attendance',progress:'progress',homework:'homework',assessments:'assessment',resources:'resource',tasks:'task',reflections:'reflection',meetings:'meeting',plans:'lesson plan',scheme:'scheme entry'};return `<div class="toolbar"><button class="btn" onclick="edit('${type}')">＋ Add ${addLabels[type]||type}</button><span class="muted small">${rows.length} record(s)</span></div><div class="tablewrap"><table><thead><tr>${cols.map(c=>`<th>${esc(c[1])}</th>`).join('')}<th>Actions</th></tr></thead><tbody>${rows.length?rows.map(r=>`<tr>${cols.map(([k,l,t])=>`<td>${k==='__day'?esc(dayFromDate(r.date)):t==='student'?esc(studentName(r[k])):esc(r[k]||'—')}</td>`).join('')}<td><button class="btn ghost" onclick="edit('${type}','${r.id}')">Edit</button></td></tr>`).join(''):`<tr><td colspan="${cols.length+1}" class="empty">No records yet. Add your first entry above.</td></tr>`}</tbody></table></div>`}
+function calendar(){let first=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate(),cells=Array(first).fill(null).concat(Array.from({length:days},(_,i)=>i+1));return `${heading('Teaching calendar','Browse any year, with your scheduled lessons and available Kuala Lumpur holiday dates.')}<div class="toolbar"><button class="btn secondary" onclick="changeMonth(-1)">← Previous</button><h2 style="margin:0 15px">${new Date(year,month,1).toLocaleString('en-GB',{month:'long',year:'numeric'})}</h2><button class="btn secondary" onclick="changeMonth(1)">Next →</button><label class="small" for="calendarYear">Year</label><input id="calendarYear" aria-label="Calendar year" type="number" min="1" max="9999" step="1" value="${year}" style="width:105px" onchange="setCalendarYear(this.value)"><button class="btn ghost" onclick="jumpToday()">Today</button><button class="btn" onclick="edit('schedule')">＋ Lesson</button><button class="btn secondary" onclick="fetchHolidays(year,true)">↻ Refresh holidays</button></div><p class="small muted">${esc(holidayStatus())}</p><div class="calendar">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="weekhead">${x}</div>`).join('')}${cells.map(d=>{if(!d)return '<div></div>';let date=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,hs=[...holidaysForYear(year),...db.customHolidays].filter(x=>x.date===date),ss=db.schedule.filter(x=>x.date===date);return `<div class="day ${hs.length?'holiday':''} ${date===today?'today':''}"><b>${d}</b>${hs.map(x=>`<div class="event">✿ ${esc(x.name)}</div>`).join('')}${ss.map(x=>`<div class="event">◷ ${esc(x.start)} ${esc(x.subject)} · ${esc(studentName(x.studentId))}</div>`).join('')}</div>`}).join('')}</div><div class="panel" style="margin-top:16px"><h3>Centre closures & custom holidays</h3><p class="small muted">Add centre holidays, replacement days, and special closures. These are saved to your private cloud planner.</p><form onsubmit="addHoliday(event)" class="toolbar"><input type="date" name="date" required style="max-width:180px"><input type="text" name="name" required maxlength="120" placeholder="Holiday or centre closure" style="max-width:270px"><button class="btn" type="submit">＋ Add date</button></form>${db.customHolidays.filter(x=>x.date.startsWith(year+'-')).sort((a,b)=>a.date.localeCompare(b.date)).map(h=>`<p class="small">${esc(h.date)} · ${esc(h.name)} <button class="btn ghost" onclick="deleteHoliday('${h.id}')">Remove</button></p>`).join('')||'<p class="small muted">No custom dates for this year.</p>'}</div><p class="notice small">Automatic dates come from a third-party Malaysian holiday feed for Kuala Lumpur and may be incomplete, unconfirmed or subject to change. Check the official Cabinet Division announcements before changing classes. The calendar itself works in any year; the feed supports 2000–2100.</p>`}
+function changeMonth(n){let d=new Date(year,month+n,1);if(d.getFullYear()<1||d.getFullYear()>9999)return;year=d.getFullYear();month=d.getMonth();render()}
+function setCalendarYear(value){const y=Number(value);if(!Number.isInteger(y)||y<1||y>9999){render();return}year=y;render()}
+function jumpToday(){const now=new Date();year=now.getFullYear();month=now.getMonth();render()}
+const pages={
+dashboard:()=>`${heading('Welcome to your teaching space ✿','A calm, organised home for lessons, students and everything in between.')}<div class="hero"><div class="eyebrow">Dream Education Centre · Mont Kiara</div><h2 style="margin:8px 0">Plan beautifully. Teach confidently.</h2><p>Your calendar now supports any year · Your timetable is ready whenever the centre confirms your classes.</p><button class="btn" onclick="go('schedule')">Plan a class →</button> <button class="btn secondary" onclick="go('students')">Add a student</button></div>${stats()}<div class="twocol"><div class="panel"><h3>Upcoming classes</h3>${db.schedule.filter(x=>x.date>=today&&x.status!=='Cancelled').sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start)).slice(0,6).map(x=>`<p><b>${esc(x.date)} · ${esc(x.start)}</b><br>${esc(x.subject)} · ${esc(studentName(x.studentId))} · ${esc(x.room)}</p>`).join('')||'<p class="muted">No classes scheduled yet.</p>'}</div><div class="panel"><h3>Today's priorities</h3>${db.tasks.filter(x=>x.status!=='Done').slice(0,6).map(x=>`<p>☐ ${esc(x.title)} <span class="chip">${esc(x.priority)}</span></p>`).join('')||'<p class="muted">Nothing pending. Enjoy the breathing room.</p>'}<button class="btn secondary" onclick="go('tasks')">Open Teacher’s Zone</button></div></div>`,
+profile:()=>`${heading('Teacher profile','Your professional details and teaching assignments.')}<div class="panel">${db.profile.map(x=>`<h3>${esc(x.name||'Your name')}</h3><p>${esc(x.centre||'')}</p><p class="muted">${esc(x.subjects||'')}</p>`).join('')}<button class="btn" onclick="edit('profile','profile')">Edit my profile</button></div>`,
+calendar,
+schedule:()=>`${heading('Class schedule','Add lessons by date and time. The day of the week is calculated automatically.')}<button class="btn secondary" onclick="go('timetable')">▦ View weekly timetable →</button>${recordTable('schedule')}`,
+timetable:weeklyTimetable,
+students:()=>`${heading('Student directory','One student profile links to attendance, homework, progress and assessments.')} ${recordTable('students')}<div class="panel" style="margin-top:20px"><h3>Open a student’s learning record</h3><select onchange="studentDetail(this.value)"><option value="">Choose student…</option>${db.students.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select><div id="studentdetail"></div></div>`,
+subjects:()=>`${heading('Subject hubs','Your teaching workspaces, sharing one connected student database.')}<div class="subjects">${allSubjects().map((s,i)=>`<button class="${subject===s?'selected':''}" onclick="chooseSubject(${i})">${esc(s)}</button>`).join('')}<button class="add-subject" onclick="addSubject()" title="Add another subject">＋ Add subject</button></div><div class="hero"><div class="eyebrow">Subject workspace</div><h2>${subject}</h2><p>Scheme of work · Teaching materials · Lesson plans · Attendance · Progress · Homework</p></div><div class="subjects">${[['scheme','Scheme of work'],['resources','Materials & reading'],['plans','Lesson plans'],['attendance','Attendance'],['progress','Progress checklist'],['homework','Homework checklist'],['assessments','Assessments']].map(([t,l])=>`<button class="${tab===t?'selected':''}" onclick="tab='${t}';render()">${l}</button>`).join('')}</div>${recordTable(tab,r=>r.subject===subject)}`,
+attendance:()=>`${heading('Attendance register','Linked automatically to each student’s profile.')} ${recordTable('attendance')}`,
+progress:()=>`${heading('Learning progress','Track mastery, school grades, milestones and areas for improvement.')} ${recordTable('progress')}`,
+homework:()=>`${heading('Homework tracker','Keep assignment dates, submission dates and feedback together.')} ${recordTable('homework')}`,
+assessments:()=>`${heading('Assessment tracker','Baseline tests, quizzes, exam grades and next targets.')} ${recordTable('assessments')}`,
+resources:()=>`${heading('Resource library','Save references and links to worksheets, Canva designs, slides and reading lists.')} ${recordTable('resources')}`,
+tasks:()=>`${heading('Teacher’s Zone','Daily, weekly and monthly tasks, lesson reflections and manageable priorities.')}<div class="cards">${['Daily','Weekly','Monthly'].map(p=>`<div class="card"><h3>${p}</h3><div class="metric">${db.tasks.filter(x=>x.period===p&&x.status!=='Done').length}</div><span class="muted">open tasks</span></div>`).join('')}</div><h2>To-do list</h2>${recordTable('tasks')}<h2>Teaching reflections</h2>${recordTable('reflections')}`,
+meetings:()=>`${heading('Meeting notes','Capture agendas, decisions, attendees and follow-up actions.')} ${recordTable('meetings')}`,
+settings:()=>`${heading('Your data & backups','Your private cloud planner with portable JSON backups.')}<div class="panel"><h3>Keeping your records safe</h3><p>Records are saved to your private Supabase cloud account when the sync indicator confirms success. Export a JSON backup regularly and store it securely.</p><button class="btn" onclick="backup()">Download JSON backup</button> <button class="btn secondary" onclick="document.getElementById('import').click()">Restore JSON backup</button><p class="notice small">Avoid shared devices for student data. Use a secure device login and keep backup files restricted. This is a personal organisational tool, not a school-approved student information system.</p><h3>Holiday sources</h3><p class="small">Cabinet Division: <a href="https://www.kabinet.gov.my/hari-kelepasan-am/" target="_blank">Official public holiday releases</a><br>2026–2027 KL list: <a href="https://publicholidays.com.my/kuala-lumpur/" target="_blank">Kuala Lumpur holidays</a>. Check updates before relying on provisional dates.</p></div>`
+};
+function studentDetail(id){let e=document.getElementById('studentdetail');if(!id){e.innerHTML='';return}let s=db.students.find(x=>x.id===id);if(!s)return;e.innerHTML=`<div class="hero"><h2>${esc(s.name)}</h2><p>${esc(s.grade)} · ${esc(s.curriculum)} · ${esc(s.subjects)}</p><p><b>Learning style:</b> ${esc(s.style)}</p><p><b>Strengths:</b> ${esc(s.strengths)}</p><p><b>Improve:</b> ${esc(s.needs)}</p><p><b>Goals:</b> ${esc(s.goals)}</p><p><b>Teaching notes:</b> ${esc(s.remarks)}</p></div>`+['attendance','progress','homework','assessments','schedule'].map(t=>`<h3>${nice(t)}</h3>${recordTable(t,r=>r.studentId===id)}`).join('')}
+function edit(type,id){let row=db[type].find(x=>x.id===id)||{},isNew=!id;let fields=schemas[type].map(([k,label,kind,req,opts])=>{let value=row[k]??(kind==='date'&&['date','updated','given'].includes(k)?today:kind==='select'&&opts?.length?opts[0]:kind==='subject'?subject:'');let control=kind==='textarea'?`<textarea name="${k}">${esc(value)}</textarea>`:kind==='select'||kind==='student'||kind==='subject'?`<select name="${k}"><option value="">— Select —</option>${(kind==='student'?db.students.map(s=>[s.id,s.name]):(kind==='subject'?allSubjects():opts).map(x=>[x,x])).map(([v,l])=>`<option value="${esc(v)}" ${v===value?'selected':''}>${esc(l)}</option>`).join('')}</select>`:`<input type="${kind}" name="${k}" value="${esc(value)}" ${req===1?'required':''}>`;return `<div class="field ${kind==='textarea'?'full':''}"><label>${esc(label)}</label>${control}</div>`}).join('');document.getElementById('overlay').innerHTML=`<div class="modalback" onclick="closeModal(event)"><div class="modal"><div class="top"><h2>${isNew?'Add':'Edit'} ${nice(type)}</h2><button class="btn ghost" onclick="dismiss()">✕</button></div><form id="editor" onsubmit="submitForm(event,'${type}','${id||''}')"><div class="formgrid">${fields}</div><div class="toolbar"><button class="btn" type="submit">Save record</button><button type="button" class="btn secondary" onclick="dismiss()">Cancel</button>${!isNew&&type!=='profile'?`<button type="button" class="btn ghost" onclick="removeRecord('${type}','${id}')">Delete</button>`:''}</div></form></div></div>`}
+function closeModal(e){if(e.target.classList.contains('modalback'))dismiss()}
+function dismiss(){document.getElementById('overlay').innerHTML=''}
+function submitForm(e,type,id){e.preventDefault();let data=Object.fromEntries(new FormData(e.target).entries());data.id=id||('id'+Date.now()+Math.random().toString(36).slice(2,6));let index=db[type].findIndex(x=>x.id===data.id);if(index<0)db[type].push(data);else db[type][index]=data;save();dismiss();render()}
+function removeRecord(type,id){if(!confirm('Delete this record? This cannot be undone.'))return;if(type==='students'&&['schedule','attendance','progress','homework','assessments','plans'].some(t=>db[t].some(x=>x.studentId===id))){alert('This student has linked records. Remove or reassign those records first to avoid orphaned entries.');return}db[type]=db[type].filter(x=>x.id!==id);save();dismiss();render()}
+function backup(){let blob=new Blob([JSON.stringify({app:'Teacher Command Centre',version:1,data:db},null,2)],{type:'application/json'});let url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Teacher_Command_Centre_Backup_'+today+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),500)}
+async function restore(e){let file=e.target.files[0];if(!file)return;try{let obj=JSON.parse(await file.text());if(!obj.data||!Array.isArray(obj.data.students))throw Error('Invalid backup');if(!confirm('Replace all current records with this backup? Export your current records first.'))return;db=obj.data;for(let k of Object.keys(seed))if(!Array.isArray(db[k]))db[k]=structuredClone(seed[k]);save();render();alert('Backup restored')}catch(err){alert('Could not import this backup: '+err.message)}finally{e.target.value=''}}
+boot();
+</script></body></html>
